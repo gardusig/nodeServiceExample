@@ -5,16 +5,15 @@ const router = express.Router();
 
 const tableName = 'nodeServiceExample';
 
-router.get('/getDynamoDbItem', async (req, res) => {
+const getDynamoDbItem = async (req: Request, res: Response) => {
     try {
         const key = extractKeyFromRequest(req);
-        console.log('key: ' + key)
         const item = await getItemFromDynamoDB(tableName, key);
         res.json({ item });
     } catch (error: any) {
         handleError(res, error);
     }
-});
+};
 
 const extractKeyFromRequest = (req: Request): string => {
     const primaryKey = req.query.key as string;
@@ -28,5 +27,7 @@ const handleError = (res: Response, error: Error, statusCode: number = 500): voi
     console.error(`Error: ${error.message}`);
     res.status(statusCode).json({ error: error.message });
 };
+
+router.get('/getDynamoDbItem', getDynamoDbItem);
 
 export default router;
